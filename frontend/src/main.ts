@@ -1,5 +1,5 @@
 // src/main.ts
-import { fetchFileAll, postFileAsync, downloadAsync} from "./api/fetchApi";
+import { fetchFileAll, postFileAsync, downloadAsync, deleteAsync} from "./api/fetchApi";
 import { renderTable } from "./dom/render";
 import { validateInputFiles, validateFile, getDownloadId } from "./utils/fileUtils";
 
@@ -12,10 +12,18 @@ async function render(){
   const fileResponses = await fetchFileAll();
   renderTable(fileArea, fileResponses);
   const downloadButtons = fileArea.querySelectorAll(".download-button");
+  const deleteButtons = fileArea.querySelectorAll(".delete-button");
   downloadButtons.forEach(downloadButton=>{
     downloadButton.addEventListener("click", async ()=>{
       const downloadId = getDownloadId(downloadButton.id);
       await downloadAsync(downloadId);
+    });
+  });
+  deleteButtons.forEach(deleteButton => {
+    deleteButton.addEventListener("click",async ()=>{
+      const deleteId = getDownloadId(deleteButton.id);
+      await deleteAsync(deleteId);
+      render();
     });
   });
 }

@@ -9,6 +9,7 @@ export function createTableHeader():HTMLTableSectionElement{
         createCell("th", "ファイルサイズ(MB)"),
         createCell("th", "MIME TYPE"),
         createCell("th", "アップロード日"),
+        createCell("th", ""),
         createCell("th", "")
     ]
     ths.forEach(th=>theadRow.appendChild(th));
@@ -24,7 +25,8 @@ export function createTableDescription(fileResponse:FileResponse):HTMLTableRowEl
         createCell("td", reshapeBite(fileResponse.file_size)),
         createCell("td", fileResponse.content_type),
         createCell("td", reshapeDate(fileResponse.uploaded_at)),
-        createDownloadCell(fileResponse.id)
+        createButtonCell(fileResponse.id, "download"),
+        createButtonCell(fileResponse.id, "delete")
     ]
     tds.forEach(td => tbodyRow.appendChild(td));
     return tbodyRow;
@@ -34,13 +36,13 @@ function createCell(tag:"th"|"td",cellText:string|number):HTMLTableCellElement{
     th.textContent = String(cellText);
     return th;
 }
-function createDownloadCell(id:number):HTMLTableCellElement{
+function createButtonCell(id:number, prefix:"download"|"delete"):HTMLTableCellElement{
     const downloadButtonCell = document.createElement("td");
     const downloadButton = document.createElement("button");
     downloadButton.type = "button";
-    downloadButton.id = `download-button-${id}`;
-    downloadButton.classList.add("download-button");
-    downloadButton.textContent = "ダウンロード";
+    downloadButton.id = `${prefix}-button-${id}`;
+    downloadButton.classList.add(`${prefix}-button`, "table-button");
+    downloadButton.textContent = prefix==="download"? "ダウンロード" : "削除";
     downloadButtonCell.appendChild(downloadButton);
     return downloadButtonCell;
 }

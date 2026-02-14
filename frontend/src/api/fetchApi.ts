@@ -34,3 +34,12 @@ export async function downloadAsync(id:string):Promise<void>{
     }
     window.location.href = response.url;
 }
+
+const deleteBaseUrl = `${baseApiUrl}/file/delete`;
+export async function deleteAsync(id:string) {
+    const deleteUrl = `${deleteBaseUrl}/${id}`;
+    const response = await fetch(deleteUrl, {method:"DELETE"});
+    if(!response.ok){
+        throw new Error("削除に失敗しました");
+    }
+}
