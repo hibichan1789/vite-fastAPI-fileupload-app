@@ -7,7 +7,7 @@ const statusPara = document.querySelector("#upload-status") as HTMLParagraphElem
 const uploadButton = document.querySelector("#upload-button") as HTMLButtonElement;
 const inputFile = document.querySelector("#input-file") as HTMLInputElement;
 const fileArea = document.querySelector("#file-area") as HTMLDivElement;
-
+const uploadArea = document.querySelector(".upload-area") as HTMLDivElement;
 //テーブルのDOM描画関数
 async function render(){
   const fileResponses = await fetchFileAll();
@@ -15,7 +15,7 @@ async function render(){
 }
 //初期化関数
 async function init(){
-  if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile){
+  if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile||!uploadArea){
     console.error("読み込みに失敗しました");
     return;
   }
@@ -58,35 +58,68 @@ fileArea.addEventListener("click",async (event)=>{
     }
   }
 });
-
+let fileState:File|null = null
 //ファイルを入れた時のイベント処理
 inputFile.addEventListener("change", ()=>{
   if(!validateInputFiles(inputFile.files)){
-    return;
-  }
-  statusPara.textContent = (inputFile.files as FileList)[0].name;
-});
-
-// アップロードボタンを押したときのイベント処理
-const MaxMB = 10;
-uploadButton.addEventListener("click",async (event)=>{
-  event.preventDefault();
-  uploadButton.disabled = true;
-  statusPara.textContent = "送信中";
-  const uploadFiles = inputFile.files;
-  if(!validateInputFiles(uploadFiles)){
     statusPara.textContent = "ファイルを選択してください";
     console.error("ファイルを選択してください");
-    uploadButton.disabled = false;
     return;
   }
-  const uploadFile = (uploadFiles as FileList)[0];
+  const uploadFile = (inputFile.files as FileList)[0]
   if(!validateFile(uploadFile, MaxMB)){
     statusPara.textContent = "ファイルが不適切です";
     console.error("ファイルが不適切です");
     uploadButton.disabled = false;
     return;
   }
+  fileState = uploadFile;
+  statusPara.textContent = fileState.name;
+});
+//ドラッグoverイベント
+uploadArea.addEventListener("dragover", (event)=>{
+  event.preventDefault();
+  uploadArea.classList.add("dragover");
+  statusPara.textContent = "ここにドロップしてください";
+});
+uploadArea.addEventListener("dragleave", (event)=>{
+  console.log("dragleave");
+  uploadArea.classList.remove("dragover");
+  statusPara.textContent = fileState ? fileState.name : "ファイルを選択またはドロップアンドドロップしてください";
+});
+uploadArea.addEventListener("drop", (event:DragEvent)=>{
+    event.preventDefault();
+    uploadArea.classList.remove("dragover");
+    const uploadFiles = event.dataTransfer?.files;
+    if(!uploadFiles){
+        return;
+    }
+    if(!validateInputFiles(uploadFiles)){
+      return;
+    }
+    const uploadFile = uploadFiles[0] as File;
+    fileArea.classList.remove("dragover");
+    console.log(uploadFile);
+    if(!validateFile(uploadFile, MaxMB)){
+        statusPara.textContent = "ファイルが不適切です";
+        return;
+    }
+    fileState = uploadFile;
+    statusPara.textContent = fileState.name;
+});
+// アップロードボタンを押したときのイベント処理
+const MaxMB = 10;
+uploadButton.addEventListener("click",async (event)=>{
+  event.preventDefault();
+  uploadButton.disabled = true;
+  if(fileState === null){
+    uploadButton.disabled = false;
+    console.error("ファイルが選択されてません");
+    statusPara.textContent = "ファイルが選択されてません";
+    return;
+  }
+  statusPara.textContent = "送信中";
+  const uploadFile = fileState
   try{
     await postFileAsync(uploadFile);
     statusPara.textContent = "アップロードに成功しました";
@@ -99,6 +132,7 @@ uploadButton.addEventListener("click",async (event)=>{
   }
   finally{
     uploadButton.disabled = false;
+    fileState = null;
   }
 });
 

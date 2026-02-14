@@ -6,6 +6,7 @@
     --button-bg-color: #f1f1f1;
     --main-bg-color: #ffffff;
     --table-even-bg-color: #f1f1f1;
+    --dragover-gb-color: #78C7E7;
 }
 
 html{
@@ -37,13 +38,16 @@ body{
 .upload-area{
     width: 500px;
     padding: 60px 0;
-    background-color: var(--main-bg-color);
+    
     border-radius: 30px;
     box-shadow: var(--box-shadow-big);
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
+}
+main .dragover{
+    border: 2px dashed rgba(0, 123, 255, 0.3);
 }
 #upload-status{
     width: 400px;
