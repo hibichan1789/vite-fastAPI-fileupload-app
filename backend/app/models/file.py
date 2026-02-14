@@ -15,4 +15,4 @@ class FileDto(BaseFile):
 
 class TableFile(BaseFile, table=True):#table=TrueでDBのテーブルになる
     id: Optional[int] = Field(default=None, primary_key=True)
-    stored_file_name:str #uuidでつけて保存したい
+    stored_name:str #uuidでつけて保存したい
