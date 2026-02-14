@@ -1,5 +1,6 @@
 # app/routers/file_router.py
 from fastapi import APIRouter, HTTPException, Header, File, UploadFile, Depends
+from fastapi import responses
 from sqlmodel import Session, select
 import os
 from ..models.file import FileResponse, TableFile
@@ -65,3 +66,16 @@ def get_file_all(session:Session=Depends(get_session)):
     except Exception as e:
         print(f"DBから取得に失敗しました: {e}")
         raise HTTPException(status_code=500, detail="データの取得に失敗しました")
+
+@router.get("/download")
+def download_file(db_id:int, session:Session=Depends(get_session)):
+    try:
+        target_record = session.exec(select(TableFile).where(TableFile.id == db_id)).first()
+        if not target_record:
+            raise HTTPException(status_code=404, detail="ファイルはありません")
+        target_file_path = os.path.join(FILE_STORE_DIR_PATH, target_record.stored_name)
+        original_name = target_record.original_name
+        content_type = target_record.content_type
+        return responses.FileResponse(path=target_file_path, filename=original_name, media_type=content_type)
+    except:
+        raise HTTPException(status_code=500, detail="ダウンロードに失敗しました")
