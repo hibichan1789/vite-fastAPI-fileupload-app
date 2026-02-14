@@ -7,7 +7,21 @@
     <script type="module" src="src/main.ts"></script>
   </head>
   <body>
-    <h1>ファイルアップロードアプリ</h1>
-    <button type="button" id="sample-button">ボタン</button>
+    <header class="header"><h1>ファイルアップロードアプリ</h1></header>
+    <main>
+      <div class="upload-area">
+        <div>
+          <label for="input-file">ファイルを選択</label>
+          <input type="file" id="input-file">
+        </div>
+        <div>
+          <p id="upload-status"></p>
+        </div>
+        <div>
+          <button type="button" id="upload-button">アップロード</button>
+        </div>
+      </div>
+      <div id="file-area"></div>
+    </main>
   </body>
 </html>
