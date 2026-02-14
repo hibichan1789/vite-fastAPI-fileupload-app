@@ -40,3 +40,8 @@ function validateName(fileName:string|null):boolean{
     }
     return true;
 }
+
+export function getDownloadId(buttonId:string):string{
+    const id = buttonId.split("-").at(-1) as string;
+    return id;
+}

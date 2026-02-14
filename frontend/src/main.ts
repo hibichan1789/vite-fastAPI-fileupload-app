@@ -1,7 +1,7 @@
 // src/main.ts
-import { fetchFileAll, postFileAsync} from "./api/fetchApi";
+import { fetchFileAll, postFileAsync, downloadAsync} from "./api/fetchApi";
 import { renderTable } from "./dom/render";
-import { validateInputFiles, validateFile } from "./utils/fileUtils";
+import { validateInputFiles, validateFile, getDownloadId } from "./utils/fileUtils";
 
 const statusPara = document.querySelector("#upload-status") as HTMLParagraphElement;
 const uploadButton = document.querySelector("#upload-button") as HTMLButtonElement;
@@ -11,6 +11,13 @@ const fileArea = document.querySelector("#file-area") as HTMLDivElement;
 async function render(){
   const fileResponses = await fetchFileAll();
   renderTable(fileArea, fileResponses);
+  const downloadButtons = fileArea.querySelectorAll(".download-button");
+  downloadButtons.forEach(downloadButton=>{
+    downloadButton.addEventListener("click", async ()=>{
+      const downloadId = getDownloadId(downloadButton.id);
+      await downloadAsync(downloadId);
+    });
+  });
 }
 async function init(){
   if(!statusPara||!uploadButton||!inputFile||!fileArea){
