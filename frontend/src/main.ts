@@ -10,34 +10,43 @@ const fileArea = document.querySelector("#file-area") as HTMLDivElement;
 async function render(){
   const fileResponses = await fetchFileAll();
   renderTable(fileArea, fileResponses);
-  const downloadButtons = fileArea.querySelectorAll(".download-button");
-  const deleteButtons = fileArea.querySelectorAll(".delete-button");
-  downloadButtons.forEach(downloadButton=>{
-    downloadButton.addEventListener("click", async ()=>{
-      const downloadId = getDownloadId(downloadButton.id);
-      try{
-        await downloadAsync(downloadId);
-      }
-      catch(error){
-        console.error("ダウンロードに失敗しました", error);
-        window.alert("ダウンロードに失敗しました");
-      }
-    });
-  });
-  deleteButtons.forEach(deleteButton => {
-    deleteButton.addEventListener("click",async ()=>{
-      const deleteId = getDownloadId(deleteButton.id);
-      try{
-        await deleteAsync(deleteId);
-        render();
-      }
-      catch(error){
-        console.error("削除に失敗しました", error);
-        window.alert("削除に失敗しました");
-      }
-    });
-  });
 }
+fileArea.addEventListener("click",async (event)=>{
+  console.log(event.target);
+  const target = event.target as HTMLElement;
+  const button = target.closest("button");
+  if(!button){
+    return;
+  }
+  const id = getDownloadId(button.id);
+  console.log(id);
+  const buttonClassList = button.classList;
+  if(buttonClassList.contains("delete-button")){
+    try{
+        await deleteAsync(id);
+        await render();
+    }
+    catch(error){
+      console.error("削除に失敗しました", error);
+      window.alert("削除に失敗しました");
+    }
+    finally{
+      return;
+    }
+  }
+  if(buttonClassList.contains("download-button")){
+    try{
+        await downloadAsync(id);
+    }
+    catch(error){
+      console.error("ダウンロードに失敗しました", error);
+      window.alert("ダウンロードに失敗しました");
+    }
+    finally{
+      return;
+    }
+  }
+});
 async function init(){
   if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile){
     console.error("読み込みに失敗しました");
