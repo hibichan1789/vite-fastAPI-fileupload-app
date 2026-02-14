@@ -14,4 +14,5 @@ def create_db_and_tables():　　
     from ..models.file import TableFile  　　
     SQLModel.metadata.create_all(engine)　　 
 トランザクション前後で整合性を合わせるためにDB保存が失敗した後は、物理ファイルも削除するようにする  
-datetime.now(Zoneinfo("Asia/Tokyo"))で日本時間の取得が確実にできる
+datetime.now(Zoneinfo("Asia/Tokyo"))で日本時間の取得が確実にできる  
+response_model=型　を使えばfastAPIが自動で変換してくれるから処理が簡単になる  

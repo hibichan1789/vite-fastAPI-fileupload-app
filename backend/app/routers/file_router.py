@@ -1,15 +1,13 @@
 # app/routers/file_router.py
 from fastapi import APIRouter, HTTPException, Header, File, UploadFile, Depends
-from sqlmodel import Session
+from sqlmodel import Session, select
 import os
-from ..models.file import FileDto, TableFile
+from ..models.file import FileResponse, TableFile
 from ..db.file import get_session
 from ..utils import file_utils
 router = APIRouter(prefix="/file", tags=["file"])
 FILE_STORE_DIR_PATH = "/code/data"
-@router.get("")
-def test():
-    return {"message": "ok"}
+
 MAX_MB = 10
 @router.post("/upload", status_code=201)
 async def post_file(
@@ -58,3 +56,12 @@ async def post_file(
         raise HTTPException(status_code=500, detail="保存に失敗しました")
     print("保存に成功しました")
     return {"status": "ok"}
+
+@router.get("/all", response_model=list[FileResponse])#response_modelを使えばfastAPIが自動でDTOに変換してくれる
+def get_file_all(session:Session=Depends(get_session)):
+    try:
+        db_files = session.exec(select(TableFile)).all()
+        return db_files
+    except Exception as e:
+        print(f"DBから取得に失敗しました: {e}")
+        raise HTTPException(status_code=500, detail="データの取得に失敗しました")
