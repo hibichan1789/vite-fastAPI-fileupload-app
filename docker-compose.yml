@@ -1,0 +1,28 @@
+# docker-compose.yml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_PORT}:8000"
+    volumes:
+      - ./backend/app:/code/app
+      - ./backend/db:/code/db
+      - ./backend/data:/code/data
+    env_file:
+      - .env
+      - ./backend/.env.backend
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:5173"
+    volumes:
+      - ./frontend:/code
+      - /code/node_modules
+    env_file:
+      - .env
+      - ./frontend/.env.frontend
