@@ -8,7 +8,7 @@ class BaseFile(SQLModel):
     file_size:int
     content_type:str
     extension:str
-    uploaded_at:datetime = Field(default=datetime.now)
+    uploaded_at:datetime
 
 class FileDto(BaseFile):
     pass
@@ -16,3 +16,7 @@ class FileDto(BaseFile):
 class TableFile(BaseFile, table=True):#table=TrueでDBのテーブルになる
     id: Optional[int] = Field(default=None, primary_key=True)
     stored_name:str #uuidでつけて保存したい
+
+class FileResponse(BaseFile):
+    id: int
+    stored_name:str
