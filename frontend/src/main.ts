@@ -1,5 +1,4 @@
-const button = document.querySelector("#sample-button") as HTMLButtonElement;
+import { fetchFileAll } from "./api/fetchApi";
 
-button.addEventListener("click", ()=>{
-  console.log("click");
-});
+const files = await fetchFileAll();
+console.log(files)
