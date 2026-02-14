@@ -25,7 +25,7 @@ async def post_file(
     file_size = file_utils.get_file_size(file)#これでファイルサイズの取得
     if not file_utils.validate_file_size(file_size, MAX_MB):
         raise HTTPException(status_code=413, detail=f"ファイルサイズは{MAX_MB}MBまでです")
-    uploaded_at = file_utils.get_now()#ここはutilsに分割してもいいかも
+    uploaded_at = file_utils.get_now()
     if not content_type:
         raise HTTPException(status_code=422)
     stored_path = os.path.join(FILE_STORE_DIR_PATH, stored_name)
@@ -70,13 +70,33 @@ def get_file_all(session:Session=Depends(get_session)):
 @router.get("/download/{db_id}")
 def download_file(db_id:int, session:Session=Depends(get_session)):
     print(db_id)
+    target_record = session.exec(select(TableFile).where(TableFile.id == db_id)).first()
+    if not target_record:
+        raise HTTPException(status_code=404, detail="ファイルはありません")
     try:
-        target_record = session.exec(select(TableFile).where(TableFile.id == db_id)).first()
-        if not target_record:
-            raise HTTPException(status_code=404, detail="ファイルはありません")
         target_file_path = os.path.join(FILE_STORE_DIR_PATH, target_record.stored_name)
         original_name = target_record.original_name
         content_type = target_record.content_type
         return responses.FileResponse(path=target_file_path, filename=original_name, media_type=content_type)
     except:
         raise HTTPException(status_code=500, detail="ダウンロードに失敗しました")
+
+@router.delete("/delete/{db_id}")
+def delete_file(db_id:int, session:Session=Depends(get_session)):
+    target_record = session.exec(select(TableFile).where(TableFile.id == db_id)).first()
+    if not target_record:
+        raise HTTPException(status_code=404, detail="ファイルはありません")
+    target_file_path = os.path.join(FILE_STORE_DIR_PATH, target_record.stored_name)
+    try:
+        session.delete(target_record)
+        session.commit()
+    except Exception as e:
+        print(e)
+        session.rollback()
+        raise HTTPException(status_code=500, detail="ファイル削除に失敗しました")
+    try:
+        if os.path.exists(target_file_path):
+            os.remove(target_file_path)
+    except Exception as e:
+        print(f"物理削除に失敗しました,手動削除が必要です:{e}")
+    return {"status": "ok"}
