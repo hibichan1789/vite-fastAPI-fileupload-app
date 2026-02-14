@@ -1,0 +1,120 @@
+:root{
+    --header-bg-color:#f1f1f1;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --box-shadow-big: 0 5px 5px var(--shadow-color);
+    --box-shadow-small: 0 3px 3px var(--shadow-color);
+    --button-bg-color: #f1f1f1;
+    --main-bg-color: #ffffff;
+    --table-even-bg-color: #f1f1f1;
+}
+
+html{
+    font-size: 62.5%;
+}
+body{
+    margin: 0;
+}
+
+.header{
+    background-color: var(--header-bg-color);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: var(--box-shadow-big);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.main{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    background-color: var(--main-bg-color);
+    padding: 50px 30px;
+}
+.upload-area{
+    width: 500px;
+    padding: 60px 0;
+    background-color: var(--main-bg-color);
+    border-radius: 30px;
+    box-shadow: var(--box-shadow-big);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+#upload-status{
+    width: 400px;
+    font-size: 1.3rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#input-file{
+    display: none;
+}
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--button-bg-color);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.button:active{
+    transform: translateY(3px);
+    box-shadow: none;
+}
+.button:hover{
+    filter: brightness(1.2);
+}
+.upload-button{
+    padding: 5px 0;
+    width: 120px;
+    font-size: 1.5rem;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow-small);
+}
+
+
+.table-button{
+    justify-self: center;
+    font-size: 1.2rem;
+    width: 90px;
+    padding: 5px 0;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-small);
+}
+.delete-button{
+    background-color: #aa0000;
+    color: #f1f1f1;
+}
+#file-area table{
+    width: 900px;
+    border-collapse: collapse;
+    box-shadow: var(--box-shadow-big);
+    
+}
+#file-area .file-name, #file-area .content-type{
+    max-width: 200px;
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#file-area th, #file-area td{
+    border: 2px solid #f1f1f1;
+}
+#file-area tr:nth-child(even){
+    background-color: var(--table-even-bg-color);
+}
+
+.footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

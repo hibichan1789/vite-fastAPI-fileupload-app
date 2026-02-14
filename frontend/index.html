@@ -8,20 +8,23 @@
   </head>
   <body>
     <header class="header"><h1>ファイルアップロードアプリ</h1></header>
-    <main>
+    <main class="main">
       <div class="upload-area">
         <div>
-          <label for="input-file">ファイルを選択</label>
+          <label for="input-file" id="input-file-button" class="upload-button button">ファイルを選択</label>
           <input type="file" id="input-file">
         </div>
         <div>
-          <p id="upload-status"></p>
+          <p id="upload-status">ファイルを選択またはドロップアンドドロップしてください</p>
         </div>
         <div>
-          <button type="button" id="upload-button">アップロード</button>
+          <button type="button" id="upload-button" class="upload-button button">アップロード</button>
         </div>
       </div>
       <div id="file-area"></div>
     </main>
+    <footer class="footer">
+      <p>&copy; hibichan1789</p>
+    </footer>
   </body>
 </html>
