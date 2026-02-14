@@ -7,10 +7,21 @@ const statusPara = document.querySelector("#upload-status") as HTMLParagraphElem
 const uploadButton = document.querySelector("#upload-button") as HTMLButtonElement;
 const inputFile = document.querySelector("#input-file") as HTMLInputElement;
 const fileArea = document.querySelector("#file-area") as HTMLDivElement;
+
+//テーブルのDOM描画関数
 async function render(){
   const fileResponses = await fetchFileAll();
   renderTable(fileArea, fileResponses);
 }
+//初期化関数
+async function init(){
+  if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile){
+    console.error("読み込みに失敗しました");
+    return;
+  }
+  await render();
+}
+//ダウンロード、削除ボタンのイベント処理
 fileArea.addEventListener("click",async (event)=>{
   console.log(event.target);
   const target = event.target as HTMLElement;
@@ -47,19 +58,16 @@ fileArea.addEventListener("click",async (event)=>{
     }
   }
 });
-async function init(){
-  if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile){
-    console.error("読み込みに失敗しました");
-    return;
-  }
-  await render();
-}
+
+//ファイルを入れた時のイベント処理
 inputFile.addEventListener("change", ()=>{
   if(!validateInputFiles(inputFile.files)){
     return;
   }
   statusPara.textContent = (inputFile.files as FileList)[0].name;
 });
+
+// アップロードボタンを押したときのイベント処理
 const MaxMB = 10;
 uploadButton.addEventListener("click",async (event)=>{
   event.preventDefault();
@@ -94,4 +102,5 @@ uploadButton.addEventListener("click",async (event)=>{
   }
 });
 
+// 読み込み時の初期化イベント処理
 document.addEventListener("DOMContentLoaded", init);
