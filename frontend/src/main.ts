@@ -7,7 +7,6 @@ const statusPara = document.querySelector("#upload-status") as HTMLParagraphElem
 const uploadButton = document.querySelector("#upload-button") as HTMLButtonElement;
 const inputFile = document.querySelector("#input-file") as HTMLInputElement;
 const fileArea = document.querySelector("#file-area") as HTMLDivElement;
-
 async function render(){
   const fileResponses = await fetchFileAll();
   renderTable(fileArea, fileResponses);
@@ -16,24 +15,42 @@ async function render(){
   downloadButtons.forEach(downloadButton=>{
     downloadButton.addEventListener("click", async ()=>{
       const downloadId = getDownloadId(downloadButton.id);
-      await downloadAsync(downloadId);
+      try{
+        await downloadAsync(downloadId);
+      }
+      catch(error){
+        console.error("ダウンロードに失敗しました", error);
+        window.alert("ダウンロードに失敗しました");
+      }
     });
   });
   deleteButtons.forEach(deleteButton => {
     deleteButton.addEventListener("click",async ()=>{
       const deleteId = getDownloadId(deleteButton.id);
-      await deleteAsync(deleteId);
-      render();
+      try{
+        await deleteAsync(deleteId);
+        render();
+      }
+      catch(error){
+        console.error("削除に失敗しました", error);
+        window.alert("削除に失敗しました");
+      }
     });
   });
 }
 async function init(){
-  if(!statusPara||!uploadButton||!inputFile||!fileArea){
+  if(!statusPara||!uploadButton||!inputFile||!fileArea||!inputFile){
     console.error("読み込みに失敗しました");
     return;
   }
   await render();
 }
+inputFile.addEventListener("change", ()=>{
+  if(!validateInputFiles(inputFile.files)){
+    return;
+  }
+  statusPara.textContent = (inputFile.files as FileList)[0].name;
+});
 const MaxMB = 10;
 uploadButton.addEventListener("click",async (event)=>{
   event.preventDefault();
