@@ -17,6 +17,9 @@ data/
 !*/db/
 */db/*
 !*/db/.gitkeep
+!*/data/
+*/data/*
+!*/data/.gitkeep
 .DS_Store
 Thumbs.db
 .vscode/
