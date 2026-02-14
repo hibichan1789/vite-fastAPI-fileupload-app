@@ -16,3 +16,4 @@ def create_db_and_tables():　　
 トランザクション前後で整合性を合わせるためにDB保存が失敗した後は、物理ファイルも削除するようにする  
 datetime.now(Zoneinfo("Asia/Tokyo"))で日本時間の取得が確実にできる  
 response_model=型　を使えばfastAPIが自動で変換してくれるから処理が簡単になる  
+意外とvanilla typescriptでもDOM操作は関数として切り出すことでDRYをしないでいいところが出てくることが分かった　　
