@@ -67,8 +67,9 @@ def get_file_all(session:Session=Depends(get_session)):
         print(f"DBから取得に失敗しました: {e}")
         raise HTTPException(status_code=500, detail="データの取得に失敗しました")
 
-@router.get("/download")
+@router.get("/download/{db_id}")
 def download_file(db_id:int, session:Session=Depends(get_session)):
+    print(db_id)
     try:
         target_record = session.exec(select(TableFile).where(TableFile.id == db_id)).first()
         if not target_record:

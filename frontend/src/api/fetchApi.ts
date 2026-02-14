@@ -24,3 +24,13 @@ export async function postFileAsync(file:File){
     }
     return await response.json();
 }
+
+const downloadBaseUrl = `${baseApiUrl}/file/download`;
+export async function downloadAsync(id:string):Promise<void>{
+    const downloadUrl = `${downloadBaseUrl}/${id}`;
+    const response = await fetch(downloadUrl);
+    if(!response.ok){
+        throw new Error("ダウンロードに失敗しました");
+    }
+    window.location.href = response.url;
+}

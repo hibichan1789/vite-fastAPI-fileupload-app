@@ -2,7 +2,7 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
-
+from pydantic import BaseModel
 class BaseFile(SQLModel):
     original_name:str
     file_size:int

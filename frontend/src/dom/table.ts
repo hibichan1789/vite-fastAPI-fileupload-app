@@ -39,6 +39,7 @@ function createDownloadCell(id:number):HTMLTableCellElement{
     const downloadButton = document.createElement("button");
     downloadButton.type = "button";
     downloadButton.id = `download-button-${id}`;
+    downloadButton.classList.add("download-button");
     downloadButton.textContent = "ダウンロード";
     downloadButtonCell.appendChild(downloadButton);
     return downloadButtonCell;
